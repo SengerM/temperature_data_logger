@@ -14,6 +14,8 @@ DallasTemperature sensorDS18B20(&oneWireObject);
 // Declaramos un RTC DS3231
 RTC_DS3231 rtc;
 
+void SD_indicate_busy(int i);
+
 void setup() {
 	pinMode(SD_BUSSY_LED_PIN, OUTPUT);
     Serial.begin(9600);
@@ -44,22 +46,24 @@ void loop() {
 	sensorDS18B20.requestTemperatures();
     now = rtc.now();
     // Create the data file ------------
+    SD_indicate_busy(1);
 	if (!SD.exists(FILENAME)) {
 		Serial.println("Creating file...");
 		File dataFile = SD.open(FILENAME, FILE_WRITE);
 		if (dataFile) { // if the file is available, write to it:
 			dataFile.println("Year\tMonth\tDay\tHour\tMinute\tSecond\tTemperatures (C)");
 			dataFile.close();
+			SD_indicate_busy(0);
 		} else { // if the file isn't open, pop up an error:
 			Serial.println("ERROR: Cannot open file in SD card");
+			SD_indicate_busy(0);
+			while (1);
 		}
-	} else {
-		Serial.println("File already exists, data will be appended");
 	}
     // Write data to file -----------------------------------
+    SD_indicate_busy(1);
     File dataFile = SD.open(FILENAME, FILE_WRITE);
 	if (dataFile) { // if the file is available, write to it:
-		digitalWrite(SD_BUSSY_LED_PIN, HIGH);
 		dataFile.print(now.year());
 		dataFile.print('\t');
 		dataFile.print(now.month());
@@ -78,7 +82,7 @@ void loop() {
 		}
 		dataFile.print('\n');
 		dataFile.close();
-		digitalWrite(SD_BUSSY_LED_PIN, LOW);
+		SD_indicate_busy(0);
 		
 		Serial.print("Data has been saved! ");
 		Serial.print(now.year());
@@ -99,19 +103,9 @@ void loop() {
 	delay(3000); 
 }
 
-void getFilename(char *filename) {
-	DateTime now = rtc.now(); int year = now.year(); int month = now.month(); int day = now.day();
-	filename[0] = '2';
-	filename[1] = '0';
-	filename[2] = (year-2000)/10 + '0';
-	filename[3] = (year-2000)%10 + '0';
-	filename[4] = month/10 + '0';
-	filename[5] = month%10 + '0';
-	filename[6] = day/10 + '0';
-	filename[7] = day%10 + '0';
-	filename[8] = '.';
-	filename[9] = 't';
-	filename[10] = 'x';
-	filename[11] = 't';
-	return;
+void SD_indicate_busy(int i) {
+	if (i!=0)
+		digitalWrite(SD_BUSSY_LED_PIN, HIGH);
+	else
+		digitalWrite(SD_BUSSY_LED_PIN, LOW);
 }
