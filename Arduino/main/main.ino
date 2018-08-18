@@ -28,11 +28,22 @@ void setup() {
 	//~ rtc.adjust(DateTime(F(__DATE__), F(__TIME__))); // Uncomment this line to set the RTC time to the compilation time.
 	// SD card initialization ------
 	Serial.println("Initializing SD card...");
-	if (!SD.begin(4)) { // see if the card is present and can be initialized:
+	if (!SD.begin(4)) {
 		Serial.println("ERROR: SD card failed, or not present");
 		while (1);
 	}
-	// Create the data file ------------
+	delay(1000);
+}
+ 
+void loop() {
+	int k;
+	int current_day = -1;
+	DateTime now;
+	
+	// Take measurements ------------------------------------
+	sensorDS18B20.requestTemperatures();
+    now = rtc.now();
+    // Create the data file ------------
 	if (!SD.exists(FILENAME)) {
 		Serial.println("Creating file...");
 		File dataFile = SD.open(FILENAME, FILE_WRITE);
@@ -45,16 +56,6 @@ void setup() {
 	} else {
 		Serial.println("File already exists, data will be appended");
 	}
-	delay(1000);
-}
- 
-void loop() {
-	int k;
-	int current_day = -1;
-	DateTime now;
-	// Take measurements ------------------------------------
-	sensorDS18B20.requestTemperatures();
-    now = rtc.now();
     // Write data to file -----------------------------------
     File dataFile = SD.open(FILENAME, FILE_WRITE);
 	if (dataFile) { // if the file is available, write to it:
