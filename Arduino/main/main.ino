@@ -11,7 +11,7 @@
 #define MEASURE_AND_STORE_SWITCH_PIN 6
 #define SD_CAN_BE_REMOVED_LED_PIN 7
 #define DATA_FILE_NAME "datalog.txt" // Max 8 chars of name + 3 of extension!!!
-#define MINUTES_BETWEEN_EACH_DATA_LOG 1
+#define MINUTES_BETWEEN_EACH_DATA_LOG 2
 
 //~ Connections --------------------
 	//~ SD card: https: //i.stack.imgur.com/Htgk6.jpg
@@ -66,7 +66,7 @@ void loop() {
 		SD_can_be_removed(false);
 		delay(1000);
 		// Take measurements ------------------------------------
-		if ( (rtc.now() - last_log_time).seconds() < MINUTES_BETWEEN_EACH_DATA_LOG) {
+		if ( (rtc.now() - last_log_time).minutes() < MINUTES_BETWEEN_EACH_DATA_LOG ) {
 			continue;
 		}
 		sensorDS18B20.requestTemperatures();
