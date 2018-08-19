@@ -100,7 +100,7 @@ void loop() {
 			dataFile.close();
 			SD_is_busy(false);
 			
-			Serial.print("Data has been saved! ");
+			Serial.print("Saved data: ");
 			Serial.print(now.year());
 			Serial.print(" ");
 			Serial.print(now.month());
@@ -111,7 +111,13 @@ void loop() {
 			Serial.print(" ");
 			Serial.print(now.minute());
 			Serial.print(" ");
-			Serial.println(now.second());
+			Serial.print(now.second());
+			Serial.print(' ');
+			for (k=0; k<=N_SENSORS-1; k++) {
+				Serial.print(sensorDS18B20.getTempCByIndex(k));
+				Serial.print(' ');
+			}
+			Serial.println(' ');
 		} else { // if the file isn't open, pop up an error:
 			Serial.println("ERROR: Cannot open file in SD card");
 			SD_can_be_removed(true);
