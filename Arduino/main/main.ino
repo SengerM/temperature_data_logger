@@ -3,6 +3,7 @@
 #include <Wire.h> // This is for the RTC
 #include "RTClib.h" // This is for the RTC
 #include <SD.h>
+#include <time.h>
 
 #define SENSORS_PIN 9
 #define N_SENSORS 4
@@ -10,10 +11,16 @@
 #define MEASURE_AND_STORE_SWITCH_PIN 6
 #define SD_CAN_BE_REMOVED_LED_PIN 7
 #define DATA_FILE_NAME "datalog.txt" // Max 8 chars of name + 3 of extension!!!
+#define MINUTES_BETWEEN_EACH_DATA_LOG 1
 
+//~ Connections --------------------
+	//~ SD card: https: //i.stack.imgur.com/Htgk6.jpg
+	//~ Temperature sensors: https://programarfacil.com/blog/arduino-blog/ds18b20-sensor-temperatura-arduino/
+	//~ RTC: https://programarfacil.com/blog/arduino-blog/reloj-con-arduino-rtc/
+	//~ Red LED, green LED and switch see macros.
+	
 OneWire oneWireObject(SENSORS_PIN);
 DallasTemperature sensorDS18B20(&oneWireObject);
-// Declaramos un RTC DS3231
 RTC_DS3231 rtc;
 
 void SD_is_busy(int i);
@@ -48,7 +55,7 @@ void setup() {
 void loop() {
 	int k;
 	int current_day = -1;
-	DateTime now;
+	DateTime last_log_time;
 	File dataFile;
 	
 	SD_can_be_removed(false);
@@ -57,9 +64,13 @@ void loop() {
 		while (!digitalRead(MEASURE_AND_STORE_SWITCH_PIN))
 			SD_can_be_removed(true);
 		SD_can_be_removed(false);
+		delay(1000);
 		// Take measurements ------------------------------------
+		if ( (rtc.now() - last_log_time).seconds() < MINUTES_BETWEEN_EACH_DATA_LOG) {
+			continue;
+		}
 		sensorDS18B20.requestTemperatures();
-		now = rtc.now();
+		last_log_time = rtc.now();
 		// Create the data file ------------
 		SD_is_busy(true);
 		if (!SD.exists(DATA_FILE_NAME)) {
@@ -80,17 +91,17 @@ void loop() {
 		SD_is_busy(true);
 		dataFile = SD.open(DATA_FILE_NAME, FILE_WRITE);
 		if (dataFile) { // If the file is available, write to it:
-			dataFile.print(now.year());
+			dataFile.print(last_log_time.year());
 			dataFile.print('\t');
-			dataFile.print(now.month());
+			dataFile.print(last_log_time.month());
 			dataFile.print('\t');
-			dataFile.print(now.day());
+			dataFile.print(last_log_time.day());
 			dataFile.print('\t');
-			dataFile.print(now.hour());
+			dataFile.print(last_log_time.hour());
 			dataFile.print('\t');
-			dataFile.print(now.minute());
+			dataFile.print(last_log_time.minute());
 			dataFile.print('\t');
-			dataFile.print(now.second());
+			dataFile.print(last_log_time.second());
 			dataFile.print('\t');
 			for (k=0; k<=N_SENSORS-1; k++) {
 				dataFile.print(sensorDS18B20.getTempCByIndex(k));
@@ -101,17 +112,17 @@ void loop() {
 			SD_is_busy(false);
 			
 			Serial.print("Saved data: ");
-			Serial.print(now.year());
+			Serial.print(last_log_time.year());
 			Serial.print(" ");
-			Serial.print(now.month());
+			Serial.print(last_log_time.month());
 			Serial.print(" ");
-			Serial.print(now.day());
+			Serial.print(last_log_time.day());
 			Serial.print(" ");
-			Serial.print(now.hour());
+			Serial.print(last_log_time.hour());
 			Serial.print(" ");
-			Serial.print(now.minute());
+			Serial.print(last_log_time.minute());
 			Serial.print(" ");
-			Serial.print(now.second());
+			Serial.print(last_log_time.second());
 			Serial.print(' ');
 			for (k=0; k<=N_SENSORS-1; k++) {
 				Serial.print(sensorDS18B20.getTempCByIndex(k));
@@ -123,7 +134,6 @@ void loop() {
 			SD_can_be_removed(true);
 			while (1);
 		}
-		delay(1000); 
 	}
 }
 
