@@ -295,5 +295,49 @@ reference "FIG. 180820 foto del bicho instalado"
  
 \end_layout
 
+\begin_layout Subsection*
+Primeros resultados
+\end_layout
+
+\begin_layout Standard
+A continuación dejo los datos registrados durante la primera noche:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 1.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Gráfico de las temperaturas registradas durante la primera noche en que
+ se instaló.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \end_body
 \end_document

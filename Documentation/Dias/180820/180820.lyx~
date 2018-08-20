@@ -269,5 +269,71 @@ name "FIG. 180820 foto del bicho instalado"
 
 \end_layout
 
+\begin_layout Standard
+Para volver a colocar la memoria sencillamente ponerla en el zócalo (mientras
+ el LED está verde y/o los dos están apagados) y reiniciar la placa Arduino.
+ Colocar el 
+\begin_inset Quotes eld
+\end_inset
+
+switch
+\begin_inset Quotes erd
+\end_inset
+
+ en 
+\begin_inset Formula $5\UNIT V$
+\end_inset
+
+ (como en la foto de la figura 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "FIG. 180820 foto del bicho instalado"
+
+\end_inset
+
+) y debería comenzar a adquirir en forma automática.
+ 
+\end_layout
+
+\begin_layout Subsection*
+Primeros resultados
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 1.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Gráfico de las temperaturas registradas durante la primera noche en que
+ se instaló.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \end_body
 \end_document
