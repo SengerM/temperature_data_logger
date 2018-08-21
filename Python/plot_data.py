@@ -5,6 +5,8 @@ import utils.my_plot_lib as mplt
 import uncertainties as unc
 from uncertainties import unumpy as unp
 
+SENSORS_LABELS = ['T1', 'Medianera', 'T3', 'T4']
+
 figs = [] # Do not touch this.
 
 # Read data ------------------------
@@ -23,7 +25,7 @@ figs.append(f)
 f.subplots_adjust(hspace=0.3) # Fine-tune figure; make subplots close to each other and hide x ticks for all but bottom plot.
 f.suptitle('Temperaturas en la galería')
 for k in range(len(temperatures)):
-	mplt.plot_yerr_filled(time, temperatures[k], axes, color=mplt.colors[k], label=r'$T_{:d}$'.format(k+1))
+	mplt.plot_yerr_filled(time, temperatures[k], axes, color=mplt.colors[k], label=SENSORS_LABELS[k])
 mplt.beauty_grid(axes)
 axes.legend()
 axes.set_xlabel('Fecha')
