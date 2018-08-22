@@ -5,7 +5,7 @@ import utils.my_plot_lib as mplt
 import uncertainties as unc
 from uncertainties import unumpy as unp
 
-SENSORS_LABELS = ['T1', 'Medianera', 'T3', 'T4']
+SENSORS_LABELS = ['T1', 'Medianera Lucy', 'T3', 'T4']
 
 figs = [] # Do not touch this.
 
